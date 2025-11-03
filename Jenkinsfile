@@ -38,7 +38,7 @@ pipeline{
         }
 
 
-        sage('Deploy'){
+        stage('Deploy'){
 
         
             steps{
