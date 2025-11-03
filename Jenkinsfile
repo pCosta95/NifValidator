@@ -37,6 +37,18 @@ pipeline{
             }
         }
 
+
+        sage('Deploy'){
+
+        
+            steps{
+                sh"""
+                ssh redhat@172.31.36.7 docker --version
+                """
+            }
+
+        }
+
     }
     
 }
