@@ -21,13 +21,21 @@ pipeline{
                 """
             }
         }
-        stage('Build'){
+        stage('Deliver'){
             steps{
+                withCredentials([usernamePassword(
+                credentialsId: 'docker-id'),
+                passwordVariable: 'passwd', 
+                usernameVariable: 'username'])
                 sh"""
-                docker build -t pcosta9/nif-validator .
+                printenv
+                docker build -t ${username}/nif-validator .
+                docker login -u ${username} -p ${passwd}
+                docker push ${username}/mif-validator
                 """
             }
         }
+
     }
     
 }
