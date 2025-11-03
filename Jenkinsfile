@@ -42,9 +42,12 @@ pipeline{
 
         
             steps{
-                sh"""
-                ssh redhat@172.31.36.7 docker --version
+                sshagent(credentals:['cluster-credentials']){
+                    sh"""
+                ssh -o StrictHostKeyChecking=no redhat@172.31.36.7 docker --version
                 """
+                }
+               
             }
 
         }
