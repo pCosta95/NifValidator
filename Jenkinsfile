@@ -26,13 +26,14 @@ pipeline{
                 withCredentials([usernamePassword(
                 credentialsId: 'docker-id'),
                 passwordVariable: 'passwd', 
-                usernameVariable: 'username'])
+                usernameVariable: 'username']){
                 sh"""
                 printenv
                 docker build -t ${username}/nif-validator .
                 docker login -u ${username} -p ${passwd}
                 docker push ${username}/mif-validator
                 """
+                }
             }
         }
 
