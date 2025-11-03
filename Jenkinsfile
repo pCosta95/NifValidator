@@ -43,9 +43,10 @@ pipeline{
 
               stage('Deploy') {
             steps {
-                sshagent(credentials: ['cluster-crendentials']) {
+                sshagent(credentials: ['cluster-credentials']) {
                     sh"""
-                    ssh -o StrictHostKeyChecking=no redhat@172.31.36.7 docker --version
+                    ssh -o StrictHostKeyChecking=no redhat@172.31.36.7 docker rm -f ${JOB_BASE_NAME} || true 
+                    ssh -o StrictHostKeyChecking=no redhat@172.31.36.7 docker run -d --name ${JOB_BASE_NAME} -p 8080:9046 ${username}/${JOB_BASE_NAME}  
                     """
                 }
             }
