@@ -38,18 +38,17 @@ pipeline{
         }
 
 
-        stage('Deploy'){
+     
 
-        
-            steps{
-                sshagent(credentals:['cluster-credentials']){
+
+              stage('Deploy') {
+            steps {
+                sshagent(credentials: ['cluster-crendentials']) {
                     sh"""
-                ssh -o StrictHostKeyChecking=no redhat@172.31.36.7 docker --version
-                """
+                    ssh -o StrictHostKeyChecking=no redhat@172.31.36.7 docker --version
+                    """
                 }
-               
             }
-
         }
 
     }
