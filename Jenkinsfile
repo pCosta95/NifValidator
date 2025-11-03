@@ -21,6 +21,13 @@ pipeline{
                 """
             }
         }
+        stage('Build'){
+            steps{
+                sh"""
+                docker build -t pcosta9/nif-validator .
+                """
+            }
+        }
     }
     
 }
