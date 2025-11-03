@@ -17,10 +17,35 @@ pipeline{
             }
             steps{
                 sh """
+                export PIP_DISABLE_PIP_VERION_CHECK=1
+                EXPORT PATH="$HOME/.local/bin:${PATH}"
+                pip install -r requirements-test.txt
                 pip install -r requirements.txt
                 """
             }
         }
+
+        stage('Unit test'){ 
+            agent{
+                docker{
+                   image 'python:3.11-slim'
+                   reuseNode true          
+                }
+               
+            }
+            steps{
+                sh 'pytest --junitxml result.xml tests/'
+            }
+                post{
+                    always {
+                        archiveArtifacts artifacts: 'result.xml', 
+                        fingerprint: true, junit: 'reuslt.xml'
+                    }
+                }
+            }
+        }
+
+
         stage('Deliver') {
             steps {
                 withCredentials([usernamePassword(
@@ -57,21 +82,6 @@ pipeline{
             }
         }
 
-            stage('Deploy-prod') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'docker-id',
-                    passwordVariable: 'passwd', 
-                    usernameVariable: 'username')]) {
-                sshagent(credentials: ['cluster-credentials']) {
-                    sh"""
-                    ssh -o StrictHostKeyChecking=no redhat@54.93.117.158 docker rm -f ${JOB_BASE_NAME} || true
-                    ssh -o StrictHostKeyChecking=no redhat@54.93.117.158 docker run -d --name ${JOB_BASE_NAME} -p 8080:9046 --pull always ${username}/${JOB_BASE_NAME}
-                    """
-                }
-                    }
-            }
-        }
 
     }
     
