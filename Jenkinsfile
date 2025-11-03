@@ -41,7 +41,7 @@ pipeline{
      
 
 
-                stage('Deploy') {
+            stage('Deploy') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'docker-id',
@@ -51,6 +51,22 @@ pipeline{
                     sh"""
                     ssh -o StrictHostKeyChecking=no redhat@172.31.36.7 docker rm -f ${JOB_BASE_NAME} || true
                     ssh -o StrictHostKeyChecking=no redhat@172.31.36.7 docker run -d --name ${JOB_BASE_NAME} -p 8080:9046 --pull always ${username}/${JOB_BASE_NAME}
+                    """
+                }
+                    }
+            }
+        }
+
+            stage('Deploy-prod') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'docker-id',
+                    passwordVariable: 'passwd', 
+                    usernameVariable: 'username')]) {
+                sshagent(credentials: ['cluster-credentials']) {
+                    sh"""
+                    ssh -o StrictHostKeyChecking=no redhat@54.93.117.158 docker rm -f ${JOB_BASE_NAME} || true
+                    ssh -o StrictHostKeyChecking=no redhat@54.93.117.158 docker run -d --name ${JOB_BASE_NAME} -p 8080:9046 --pull always ${username}/${JOB_BASE_NAME}
                     """
                 }
                     }
