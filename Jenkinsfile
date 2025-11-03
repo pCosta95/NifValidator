@@ -33,6 +33,7 @@ pipeline{
                         docker login -u ${username} -p ${passwd}
                         docker push ${username}/nif-validator
                         """
+                        
                }
             }
         }
