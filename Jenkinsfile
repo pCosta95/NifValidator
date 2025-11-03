@@ -18,7 +18,7 @@ pipeline{
             steps{
                 sh """
                 export PIP_DISABLE_PIP_VERION_CHECK=1
-                EXPORT PATH="$HOME/.local/bin:${PATH}"
+                export PATH="$HOME/.local/bin:${PATH}"
                 pip install -r requirements-test.txt
                 pip install -r requirements.txt
                 """
@@ -61,10 +61,6 @@ pipeline{
                }
             }
         }
-
-
-     
-
 
             stage('Deploy') {
             steps {
